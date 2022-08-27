@@ -189,9 +189,6 @@ public class Manager extends JFrame implements WindowListener, ActionListener
 		
 	}
 	
-	
-	
-	
 	@Override
 	public void windowOpened(WindowEvent e) {
 		// TODO Auto-generated method stub
