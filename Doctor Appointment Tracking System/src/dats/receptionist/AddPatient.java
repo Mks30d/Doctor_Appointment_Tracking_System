@@ -450,7 +450,7 @@ public class AddPatient extends JFrame implements ActionListener, WindowListener
 						appointment_no= rs.getString(1);
 //						System.out.println("AppointmentNo ="+appointment_no);
 						txtAppointmentNo.setText(appointment_no);
-						JOptionPane.showMessageDialog(this, "Token Number = "+appointment_no);
+						JOptionPane.showMessageDialog(this, "Appointment Number = "+appointment_no);
 					}					
 					
 					JOptionPane.showMessageDialog(this, "Patient Details Added Succesfully");
