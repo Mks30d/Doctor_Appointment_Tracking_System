@@ -19,8 +19,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
@@ -100,18 +103,52 @@ public class DeleteDoctor extends JFrame implements ActionListener, WindowListen
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		deleteDoctor();
 	}
 	
+	
+	
 	void deleteDoctor()
 	{
+		
 		String id = txtid.getText().trim();
+		int k=0;
+		
+		//checking whether doctor has appointment or not before deletion
+		try
+		{
+			Statement stmt= con.createStatement();
+			ResultSet rs= stmt.executeQuery("select DoctorID from patient_details");
+			
+			while(rs.next())
+			{
+				String id1=rs.getString(1);
+				
+				if(id.equals(id1))
+				{
+					k++;
+				}
+			}
+		}
+		catch (SQLException  e) {
+			e.printStackTrace();
+		}
+
+		
+		
 		if (id.isEmpty())
 			JOptionPane.showMessageDialog(this, "Please Provide Doctor ID");
 		
+		
+		else if(k>0)
+		{
+			JOptionPane.showMessageDialog(this, "DocotrID="+id+" Has Appointment", "Matched", JOptionPane.CLOSED_OPTION);					
+
+		}
+		
 		else
 		{
+			
 			int message = JOptionPane.showConfirmDialog(this, "Do You Want To Delete");
 //			System.out.println(message);
 			
