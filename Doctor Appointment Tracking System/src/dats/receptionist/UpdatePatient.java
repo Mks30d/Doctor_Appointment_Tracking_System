@@ -168,7 +168,7 @@ public class UpdatePatient extends JFrame implements ActionListener, ItemListene
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 
-		String strsql = "select Token from patient_details";
+		String strsql = "select Token from patient_details where PatientVisit='No'";
 
 		try {
 			ps = con.prepareStatement(strsql); 
@@ -310,9 +310,7 @@ public class UpdatePatient extends JFrame implements ActionListener, ItemListene
 				
 				//###############################################################
 
-//				String strsql = "select * from patient_details where Token=?";
-//				select ID from table where status = 'OK'
-				String strsql = "select * from patient_details where Token=? and status='No'";
+				String strsql = "select * from patient_details where Token=? ";
 				
 				try {
 					ps = con.prepareStatement(strsql);
@@ -361,9 +359,6 @@ public class UpdatePatient extends JFrame implements ActionListener, ItemListene
 					}
 
 				}
-		
-		
-		
 			}
 			}
 	}
@@ -435,24 +430,3 @@ public class UpdatePatient extends JFrame implements ActionListener, ItemListene
 	}
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
