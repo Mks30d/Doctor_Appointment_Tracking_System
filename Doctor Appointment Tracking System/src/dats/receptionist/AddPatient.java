@@ -472,8 +472,8 @@ public class AddPatient extends JFrame implements ActionListener, WindowListener
 				
 				
 //============= to get the next appointment no. from database
-				ResultSet rs = ps.getGeneratedKeys();
-				String appointment_no;
+//				ResultSet rs = ps.getGeneratedKeys();
+//				String appointment_no;
 
 				if (row_status > 0) {
 					
