@@ -1,3 +1,5 @@
+		
+		
 		ImageIcon ic=new ImageIcon(Login.class.getResource("/dats/images/4860151.jpg"));
 		Image i = ic.getImage().getScaledInstance(1350, 639, Image.SCALE_SMOOTH);
 		ImageIcon ic1 = new ImageIcon(i);
@@ -5,3 +7,5 @@
 		JLabel lblNewLabel = new JLabel(ic1);
 		lblNewLabel.setBounds(0, 0, 1350, 639);
 		contentPane.add(lblNewLabel);
+
+
