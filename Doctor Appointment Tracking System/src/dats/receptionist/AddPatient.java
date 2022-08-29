@@ -92,7 +92,7 @@ public class AddPatient extends JFrame implements ActionListener, WindowListener
 		this.addWindowListener(this);
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 704, 628);
+		setBounds(100, 100, 693, 612);
 		contentPane =  new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -105,14 +105,16 @@ public class AddPatient extends JFrame implements ActionListener, WindowListener
 		contentPane.add(lbltoken);
 
 		txttoken = new JTextField();
-		txttoken.setBounds(285, 395, 154, 31);
+		txttoken.setBackground(SystemColor.controlHighlight);
+		txttoken.setEditable(false);
+		txttoken.setBounds(285, 395, 140, 31);
 		contentPane.add(txttoken);
 		txttoken.setColumns(10);
 
-		btngenerate = new JButton("Generate");
+		btngenerate = new JButton("GENERATE");
 		btngenerate.addActionListener(this);
 		btngenerate.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btngenerate.setBounds(445, 395, 119, 31);
+		btngenerate.setBounds(435, 416, 129, 31);
 		setLocationRelativeTo(this);
 		contentPane.add(btngenerate);
 
@@ -190,35 +192,35 @@ public class AddPatient extends JFrame implements ActionListener, WindowListener
 		txtAppointmentNo.setBackground(SystemColor.controlHighlight);
 		txtAppointmentNo.setToolTipText("Auto Generated");
 		txtAppointmentNo.setColumns(10);
-		txtAppointmentNo.setBounds(285, 518, 279, 33);
+		txtAppointmentNo.setBounds(285, 437, 140, 33);
 		contentPane.add(txtAppointmentNo);
 
 		lblAppointmentno = new JLabel("AppointmentNo.");
 		lblAppointmentno.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblAppointmentno.setBounds(90, 518, 181, 33);
+		lblAppointmentno.setBounds(90, 437, 181, 33);
 		contentPane.add(lblAppointmentno);
 
 		lblAppointmentmode = new JLabel("AppointmentMode");
 		lblAppointmentmode.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblAppointmentmode.setBounds(90, 437, 181, 33);
+		lblAppointmentmode.setBounds(90, 481, 181, 33);
 		contentPane.add(lblAppointmentmode);
 
 		rdPhone = new JRadioButton("Phone");
 		modeGroup.add(rdPhone);
 		rdPhone.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		rdPhone.setBounds(318, 437, 105, 32);
+		rdPhone.setBounds(318, 481, 105, 32);
 		contentPane.add(rdPhone);
 
 		rdMannual = new JRadioButton("Mannual");
 		modeGroup.add(rdMannual);
 		rdMannual.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		rdMannual.setBounds(425, 437, 105, 32);
+		rdMannual.setBounds(425, 481, 105, 32);
 		contentPane.add(rdMannual);
 
 		btnAdd = new JButton("ADD");
 		btnAdd.addActionListener(this);
 		btnAdd.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnAdd.setBounds(285, 476, 279, 31);
+		btnAdd.setBounds(285, 520, 279, 31);
 		contentPane.add(btnAdd);
 
 		cmbid = new JComboBox();
@@ -299,15 +301,41 @@ public class AddPatient extends JFrame implements ActionListener, WindowListener
 
 //		System.out.println("source=" + e.getActionCommand());
 		
-		if (e.getActionCommand() == "Generate") {
+		if (e.getActionCommand() == "GENERATE") {
+			
+			//for generating token No
 			Random r = new Random();
 			int result = r.nextInt(1000, 9999);
 //			System.out.println(result);
 			txttoken.setText("Tok" + String.valueOf(result));
 			
-		}
+			
+			//for generating appointment No
+			Statement stat=null;
+			ResultSet rs=null;
+			int appno=0;
+			try {
+				stat=con.createStatement();
+				String sql="select AppointmentNo from patient_details order by AppointmentNo desc";
+				rs= stat.executeQuery(sql);
+				
+				if(rs.next())
+				{
+//					System.out.println("rs.getInt(1)="+rs.getInt(1));
+					appno =rs.getInt(1) + 1;
+					txtAppointmentNo.setText(String.valueOf(appno));
+				}
+			}
+			
+			catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 
-		else {
+		}
+		
+		
+		else 
+		{
 			addPatient();
 		}
 
@@ -321,6 +349,7 @@ public class AddPatient extends JFrame implements ActionListener, WindowListener
 		String phone = txtphone.getText();
 		String problem = txtproblem.getText();
 		String token = txttoken.getText();
+		String appointmentno=txtAppointmentNo.getText();
 
 		String genderStatus = "";
 		if (rdmale.isSelected()) {
@@ -419,8 +448,10 @@ public class AddPatient extends JFrame implements ActionListener, WindowListener
 			String str_insert = "insert into patient_details (PatientName, Gender, Age, Phone, Problem, DoctorID, Date, AppointmentDate, Token, AppointmentNo, AppointmentMode,PatientVisit) values (?,?,?,?,?,?,?,?,?,?,?,?)";
 
 			try {
-				ps = con.prepareStatement(str_insert, Statement.RETURN_GENERATED_KEYS);
+				      //Statement.RETURN_GENERATED_KEYS -> is for fetching generated appointment No. from database
+//				ps = con.prepareStatement(str_insert, Statement.RETURN_GENERATED_KEYS);
 				
+				ps = con.prepareStatement(str_insert); 
 								
 				ps.setString(1, name);
 				ps.setString(2, genderStatus);
@@ -431,10 +462,11 @@ public class AddPatient extends JFrame implements ActionListener, WindowListener
 				ps.setString(7, today_date);//present date
 				ps.setString(8, appointmentdate);
 				ps.setString(9, token);
-				ps.setInt(10, 0);
+				ps.setInt(10, Integer.parseInt(appointmentno));
 				ps.setString(11, modeStatus);
 				ps.setString(12, "No");		
 
+				
 				int row_status = ps.executeUpdate();
 //				System.out.println("Insert status " + row_status);
 				
@@ -445,13 +477,13 @@ public class AddPatient extends JFrame implements ActionListener, WindowListener
 
 				if (row_status > 0) {
 					
-					if(rs.next())
-					{
-						appointment_no= rs.getString(1);
-//						System.out.println("AppointmentNo ="+appointment_no);
-						txtAppointmentNo.setText(appointment_no);
-						JOptionPane.showMessageDialog(this, "Appointment Number = "+appointment_no);
-					}					
+//					if(rs.next())
+//					{
+//						appointment_no= rs.getString(1);
+////						System.out.println("AppointmentNo ="+appointment_no);
+//						txtAppointmentNo.setText(appointment_no);
+//						JOptionPane.showMessageDialog(this, "Appointment Number = "+appointment_no);
+//					}					
 					
 					JOptionPane.showMessageDialog(this, "Patient Details Added Succesfully");
 
